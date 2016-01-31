@@ -1,0 +1,31 @@
+<project name="java_roombots" default="run" basedir=".">
+    <description>A simple websocket wrapper to drive a Roomba!</description>
+
+    <property name="src" location="src"/>
+    <property name="build" location="build"/>
+
+    <target name="init">
+        <tstamp />
+        <mkdir dir="${build}" />
+    </target>
+
+    <target name="compile" depends="init">
+        <javac srcdir="${src}" destdir="${build}">
+            <classpath path="vendor/java-json.jar" />
+            <classpath path="vendor/java_websocket.jar" />
+        </javac>
+    </target>
+
+    <target name="run" depends="compile">
+        <property name="roomba-host" value="roombots.riesd.com" />
+        <property name="channel" value="roomba" />
+        <java classpath="${build}" classname="CLI">
+            <classpath path="vendor/java-json.jar" />
+            <classpath path="vendor/java_websocket.jar" />
+            <!-- This is kind of weird, but we can take the ant property and shove them
+            into a sysproperty as a really simple set of command line flags. -->
+            <sysproperty key="roomba-host" value="${roomba-host}" />
+            <sysproperty key="channel" value="${channel}" />
+        </java>
+    </target>
+</project>
